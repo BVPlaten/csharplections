@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "eventhandling": {
+      "commandName": "Project",
+      "commandLineArgs": "strafbank_02.jpg",
+      "workingDirectory": "C:\\Users\\bernd\\Pictures"
+    }
+  }
+}
