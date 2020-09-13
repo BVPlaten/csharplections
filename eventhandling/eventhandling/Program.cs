@@ -42,9 +42,22 @@ namespace eventhandling
                     }
                 };
 
+            // ------------ bernd probiert 
+            SFML.System.Vector2i size = new Vector2i();
+            size.X = 100;
+            size.Y = 50;
+
+            RectangleShape rectangle = new RectangleShape();
+            rectangle.Size = new Vector2f(100, 50);
+            rectangle.OutlineColor = new Color(90, 90, 255);
+            rectangle.FillColor = new Color(130, 130, 255);
+            rectangle.OutlineThickness = 5;
+            rectangle.Position = new Vector2f(200, 100);
+            // ------------
+
             Font font = new Font("C:/Windows/Fonts/arial.ttf");
             Text text = new Text("Hallo Bernd !", font);
-            text.CharacterSize = 48;
+            text.CharacterSize = 64;
             float textWidth = text.GetLocalBounds().Width;
             float textHeight = text.GetLocalBounds().Height;
             float xOffset = text.GetLocalBounds().Left;
@@ -64,7 +77,10 @@ namespace eventhandling
                 window.DispatchEvents();
                 window.Clear();
                 text.Rotation = angle;
+                rectangle.Rotation = -angle;
+                window.Draw(rectangle);
                 window.Draw(text);
+
                 window.Display();
             }
         }
