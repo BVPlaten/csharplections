@@ -3,7 +3,7 @@
     "eventhandling": {
       "commandName": "Project",
       "commandLineArgs": "strafbank_02.jpg",
-      "workingDirectory": "C:\\Users\\bernd\\Pictures"
+      "workingDirectory": "C:\\Users\\bernd\\source\\repos\\csharplections\\eventhandling\\eventhandling\\"
     }
   }
 }
