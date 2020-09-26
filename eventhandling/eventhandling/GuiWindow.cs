@@ -34,7 +34,7 @@ namespace eventhandling
             window.MouseButtonPressed += (sender, e) =>
             {
                 // hole die aktuellen Koordinaten des Clicks
-                var myHelperRect = recShp.TextureRect;
+                var myHelperRect = recShp.GetGlobalBounds();
                 if (myHelperRect.Contains(e.X, e.Y))
                     Console.WriteLine($" X-POS {e.X} ; Y-POS {e.Y}");
             };
