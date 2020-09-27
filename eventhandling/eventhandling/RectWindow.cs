@@ -1,17 +1,27 @@
 ﻿using System;
+using System.Runtime;
 using SFML.Window;
 using SFML.Graphics;
 using SFML.System;
 using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace eventhandling
 {
     public delegate void RectanglePressedEventHandler(string msgText);
+    
 
     class RectWindow
     {
         public event RectanglePressedEventHandler RectanglePressed;
+        public List<Action<object?, MouseButtonEventArgs>> mouseEvt;
         protected RenderWindow window;
+
+        public RectWindow()
+        {
+            mouseEvt = new List<Action<object?,MouseButtonEventArgs>>();
+        }
 
         public void Show()
         {
@@ -31,6 +41,7 @@ namespace eventhandling
             VideoMode mode = new VideoMode(650, 600);
             window = new RenderWindow(mode, "Press on a Button");
             window.Closed += (obj, e) => { window.Close(); };
+
             window.KeyPressed +=
                 (sender, e) =>
                 {
@@ -65,6 +76,13 @@ namespace eventhandling
             recShp.OutlineThickness = 5;
             recShp.Position = new Vector2f(x, y);
 
+            Action<object?, MouseButtonEventArgs> exp = (sender, e) =>
+            {
+                if (recShp.GetGlobalBounds().Contains(e.X, e.Y))
+                    RectanglePressed.Invoke($"{ rectName }--:--X-POS {e.X}; Y-POS {e.Y}");
+            };
+            mouseEvt.Add(exp);
+            
             window.MouseButtonPressed += (sender, e) =>
             {
                 if (recShp.GetGlobalBounds().Contains(e.X, e.Y))
