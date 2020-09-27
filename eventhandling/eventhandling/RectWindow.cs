@@ -2,7 +2,7 @@
 using SFML.Window;
 using SFML.Graphics;
 using SFML.System;
-using System.Drawing;
+using System.Reflection;
 
 namespace eventhandling
 {
@@ -11,11 +11,25 @@ namespace eventhandling
     class RectWindow
     {
         public event RectanglePressedEventHandler RectanglePressed;
+        protected RenderWindow window;
 
         public void Show()
         {
+            DrawRects();
+            while (window.IsOpen)
+            {
+                window.DispatchEvents();
+                System.Threading.Thread.Sleep(200);
+            }
+        }
+
+        public void DrawRects()
+        {
+            if (window != null)
+                window.Close();
+
             VideoMode mode = new VideoMode(650, 600);
-            RenderWindow window = new RenderWindow(mode, "Press on a Button");
+            window = new RenderWindow(mode, "Press on a Button");
             window.Closed += (obj, e) => { window.Close(); };
             window.KeyPressed +=
                 (sender, e) =>
@@ -27,28 +41,19 @@ namespace eventhandling
                     }
                 };
 
-            var brdrClr1 = new SFML.Graphics.Color(90, 90, 255);
-            var fillClr1 = new SFML.Graphics.Color(130, 130, 255);
-            RectangleShape recShp1 = createRect(window, 25, 25, brdrClr1, fillClr1,"Dieter");
-            window.Draw(recShp1);
-
-            var brdrClr2 = new SFML.Graphics.Color(130, 130, 55);
-            var fillClr2 = new SFML.Graphics.Color(200, 200, 120);
-            RectangleShape recShp2 = createRect(window, 25, 175, brdrClr2, fillClr2, "Hugo");
-            window.Draw(recShp2);
-
-            var brdrClr3 = new SFML.Graphics.Color(130, 30, 55);
-            var fillClr3 = new SFML.Graphics.Color(255, 10, 80);
-            RectangleShape recShp3 = createRect(window, 25, 325, brdrClr3, fillClr3, "Nina");
-            window.Draw(recShp3);
-
+            window.Draw(createRect(window, 25, 25, creatColor(), creatColor(), "Dieter"));
+            window.Draw(createRect(window, 150, 25, creatColor(), creatColor(), "Hugo"));
+            window.Draw(createRect(window, 275, 25, creatColor(), creatColor(), "Nina"));
             window.Display();
-            while (window.IsOpen)
-            {
-                // Druecken des Escape-Buttons zum Beenden auswerten
-                window.DispatchEvents();
-                System.Threading.Thread.Sleep(200);
-            }
+        }
+
+        private SFML.Graphics.Color creatColor()
+        {
+            Random rnd = new Random();
+            byte red = (byte) rnd.Next(0, 255);
+            byte green = (byte)rnd.Next(0, 255);
+            byte blue = (byte)rnd.Next(0, 255);
+            return new SFML.Graphics.Color(red, green, blue);
         }
 
         protected virtual RectangleShape createRect(RenderWindow window, int x, int y, SFML.Graphics.Color brdrClr, SFML.Graphics.Color fillClr, string rectName = "")
@@ -62,9 +67,8 @@ namespace eventhandling
 
             window.MouseButtonPressed += (sender, e) =>
             {
-                var myHelperRect = recShp.GetGlobalBounds();
-                if (myHelperRect.Contains(e.X, e.Y))
-                    RectanglePressed.Invoke($"{ rectName }--:--X - POS { e.X}; Y - POS { e.Y}");
+                if (recShp.GetGlobalBounds().Contains(e.X, e.Y))
+                    RectanglePressed.Invoke($"{ rectName }--:--X-POS {e.X}; Y-POS {e.Y}");
             };
             return recShp;
         }
